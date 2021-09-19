@@ -1,77 +1,62 @@
-﻿@model IEnumerable<ResearchersJournals.Web.Models.DocumentModels.ResearchersDocumentsDTO>
-
+@model ResearchersJournals.Web.Models.DocumentModels.DocumentViewModel
 @{
-    ViewData["Title"] = "Journals Documents";
+    ViewData["Title"] = "Upload Document";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    table.model-state {
+        border-color: #600;
+        border-width: 0 0 1px 1px;
+        border-style: solid;
+        border-collapse: collapse;
+        font-size: .8em;
+        font-family: arial;
+    }
 
+        table.model-state td {
+            border-color: #600;
+            border-width: 1px 1px 0 0;
+            border-style: solid;
+            margin: 0;
+            padding: .25em .75em;
+            background-color: #FFC;
+        }
+</style>
 <div class="card shadow mb-4">
-  
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Journals Documents</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Upload Document</h6>
 
     </div>
     <div class="card-body">
-        <div class="row">
-            <a class="btn btn-primary" href="@Url.Action("UploadDocument","Document")">
-                <i class="fas fa-upload"></i>
-                <span>Upload Document</span>
-            </a>
-        </div>
-     <br/>
-        <div class="table-responsive">
-
-            <table id="documents" class="table table-bordered" width="100%" cellspacing="0">
-
-
-                <thead>
+        <table class="model-state">
+            @foreach (var item in ViewContext.ViewData.ModelState)
+            {
+                if (item.Value.Errors.Any())
+                {
                     <tr>
-                        <th>
-                            Upload by
-                        </th>
-                        <th>
-                            File Name
-                        </th>
-
-                        <th>
-                            Upload Date
-                        </th>
-                        <th></th>
+                        <td><b>@item.Key</b></td>
+                       
+                        <td>@(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <partial name="_DocumentRow" model="item" />
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
- 
-<div id="pdfModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
+                }
+            }
+        </table>
+        <br/>
+        <form asp-controller="Document" asp-action="UploadDocument" method="post"
+              enctype="multipart/form-data">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                
+            <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" accept="application/pdf" asp-for="FormFile">
+                <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
-            <div class="modal-body">
-                <div id="documentRender"></div>
-
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+            <div class="form-group">
+                <label asp-for="FileName"></label>
+                <input asp-for="FileName" class="form-control" />
+                <span asp-validation-for="FileName" class="text-danger"></span>
             </div>
-
-        </div>
+            <button class="btn btn-primary" type="submit">Upload File</button>
+        </form>
     </div>
 </div>
 <link rel="stylesheet" href="~/css/datatable.min.css" />
@@ -79,32 +64,23 @@
 <link href="~/css/sweetalert/sweetalert.css" rel="stylesheet" />
 @section scripts {
     <script src="~/js/datatables.min.js"></script>
-    <!-- Page level custom scripts -->
+     
     <script src="~/js/demo/datatables-demo.js"></script>
     <script src="~/js/sweetalert/sweetalert.min.js"></script>
 
 }
 
 <script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $('#FileName').val(fileName);
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
     $(document).ready(function () {
-        $('#documents').DataTable();
-
+        
 
     });
-    function openPDF(documentId) {
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Action("GetDocument")',
-            data: { documentId: documentId },
-            success: function (data) {
-                if (data.Success == false) {
-                    sweetAlert("Oops...", data.Message, "error");
-                } else {
-                    $('#documentRender').html(data);
-                    $('#pdfModal').modal('show');
+    
 
-                }
-            }
-        });
-    }
+   
 </script>
