@@ -1,0 +1,22 @@
+﻿@model ResearchersJournals.Web.Models.DocumentModels.ResearchersDocumentsDTO
+
+<td>
+    @Html.DisplayFor(modelItem => Model.ResearcherName)
+</td>
+<td>
+    @Html.DisplayFor(modelItem => Model.FileName)
+</td>
+
+<td>
+   @Model.CreatedDate.ToShortDateString()
+
+</td>
+<td>
+    @if (Model.IsOwner)
+    {
+        <a href="@Url.Action("DownloadDocument","Document" , new  {documentId = Model.DocumentId })">
+            <i class="fas fa-file-download"></i>
+        </a>
+    }
+    <a style="cursor:pointer" onclick="openPDF('@Model.DocumentId')"><i class="fas fa-eye"></i></a> 
+</td>

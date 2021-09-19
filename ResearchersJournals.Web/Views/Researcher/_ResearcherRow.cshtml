@@ -1,0 +1,34 @@
+﻿@model ResearchersJournals.Web.Models.ResearcherModels.ResearcherDTO
+@Html.HiddenFor(modelItem => Model.Id)
+
+    <td>
+        @Html.DisplayFor(modelItem => Model.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => Model.Email)
+    </td>
+
+    <td>
+        @if (Model.IsSubscribe)
+        {
+            <label class="label label-primary">Subscribe</label>
+        }
+        else
+        {
+            <label>Not Subscribe</label>
+        }
+
+    </td>
+    <td>
+        @if (Model.IsSubscribe)
+        {
+            <button type="button" onclick="subscribe('@Model.Id', true, this)" class="btn btn-danger">UnSubscribe</button>
+        }
+        else
+        {
+            <button type="button" onclick="subscribe('@Model.Id', false, this)" class="btn btn-primary">Subscribe</button>
+        }
+
+
+    </td>
+ 

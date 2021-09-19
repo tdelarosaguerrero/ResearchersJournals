@@ -1,0 +1,90 @@
+﻿@model ResearchersJournals.Web.Models.Account.RegisterViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_AnonymousLayout.cshtml";
+}
+<style>
+    table.model-state {
+        border-color: #600;
+        border-width: 0 0 1px 1px;
+        border-style: solid;
+        border-collapse: collapse;
+        font-size: .8em;
+        font-family: arial;
+    }
+
+        table.model-state td {
+            border-color: #600;
+            border-width: 1px 1px 0 0;
+            border-style: solid;
+            margin: 0;
+            padding: .25em .75em;
+            background-color: #FFC;
+        }
+</style>
+<div class="container">
+    <form id="account" action="register" method="post">
+        <table class="model-state">
+            @foreach (var item in ViewContext.ViewData.ModelState)
+            {
+                if (item.Value.Errors.Any())
+                {
+                    <tr>
+                        <td><b>@item.Key</b></td>
+                        <td>@((item.Value == null || item.Value == null) ? "<null>" : item.Value.RawValue)</td>
+                        <td>@(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))</td>
+                    </tr>
+                }
+            }
+        </table>
+
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="p-5">
+                    <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">Register Account</h1>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UserName"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+
+
+                    <hr>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <a href="@Url.Action("Login")" class="btn btn-danger">Cancel</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+</div>
